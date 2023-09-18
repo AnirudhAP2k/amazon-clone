@@ -122,13 +122,14 @@ itemRouter.post('/addwishlist/:id', fetchUser, async (req, res) => {
             return res.status(400).send({success, error: "Item already in the List"});
         }
 
-        const { title, description, price } = await Item.findById(itemId);
+        const { title, description, price, category } = await Item.findById(itemId);
         const items = await wishList.create({
             item: itemId,
             user: req.user,
             title: title,
             description: description,
-            price: price
+            price: price,
+            category: category
         });
         success = true;
         return res.status(200).json(success, items)
