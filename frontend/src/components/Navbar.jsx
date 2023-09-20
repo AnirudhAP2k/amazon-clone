@@ -14,8 +14,8 @@ function Navbar() {
     <div>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
         <div className="container-fluid">
-          <Link className="navbar-brand" to="/">
-            iNoteBook
+          <Link className="navbar-brand" to="/allitems">
+            LocalStore
           </Link>
           <button
             className="navbar-toggler"
@@ -31,7 +31,7 @@ function Navbar() {
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className={`nav-link ${location.pathname === '/' ? "active" : ""}`} aria-current="page" to="/">
+                <Link className={`nav-link ${location.pathname === '/allitems' ? "active" : ""}`} aria-current="page" to="/allitems">
                   Home
                 </Link>
               </li>
@@ -39,6 +39,20 @@ function Navbar() {
                 <Link className={`nav-link ${location.pathname === '/about' ? "active" : ""}`} to="/about">
                   About
                 </Link>
+              </li>
+              <li className="nav-item dropdown">
+                  <Link className="nav-link dropdown-toggle text-light" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Categories
+                  </Link>
+                  <ul className="dropdown-menu">
+                    <li><Link className="dropdown-item" to="/allitems">All Categories</Link></li>
+                    <li><Link className="dropdown-item" to="/clothes">Clothes</Link></li>
+                    <li><Link className="dropdown-item" to="/business">Electronics</Link></li>
+                    <li><Link className="dropdown-item" to="/entertainment">Smart Phones</Link></li>
+                    <li><Link className="dropdown-item" to="/health">Footwear</Link></li>
+                    <li><Link className="dropdown-item" to="/science">Sports</Link></li>
+                    <li><Link className="dropdown-item" to="/technology">Homeware's</Link></li>
+                  </ul>
               </li>
             </ul>
             {!localStorage.getItem('auth-token') ? 
