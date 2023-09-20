@@ -13,7 +13,8 @@ let success = false;
 itemRouter.post('/additem', fetchUser, [
     body('title', 'Enter atleat 2 characters').isLength({ min: 2 }),
     body('description', 'Enter a valid description of atleast 5 characters').isLength({ min: 5 }),
-    body('price', 'Enter a valid price').isNumeric()
+    body('price', 'Enter a valid price').isNumeric(),
+    body('category', 'Enter a valid category').exists()
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -29,10 +30,11 @@ itemRouter.post('/additem', fetchUser, [
         const newItem = await Item.create({
             title: req.body.title,
             description: req.body.description,
-            price: req.body.price
+            price: req.body.price,
+            category: req.body.category
         });
         success = true;
-        return res.status(200).send(success, newItem);
+        return res.status(200).send({success, newItem});
     } catch (error) {
         console.log(error);
         return res.status(400).send({success, error: "Internal Server Error" });
@@ -44,7 +46,7 @@ itemRouter.get('/getallitems', async (req, res) => {
     try {
         const items = await Item.find();
         success = true;
-        return res.status(200).json(success, items)
+        return res.status(200).json({success, items})
     } catch (error) {
         console.log(error);
         return res.status(400).send({success, error: "Internal Server Error"});
@@ -55,18 +57,20 @@ itemRouter.get('/getallitems', async (req, res) => {
 itemRouter.put('/updateitem/:id', fetchUser, [
     body('title', 'Enter a atleast 2 charaters').isLength({ min : 2}),
     body('description', 'Enter atleat 5 characters').isLength({ min : 5}),
-    body('price', 'Enter a valid price').isNumeric()
+    body('price', 'Enter a valid price').isNumeric(),
+    body('category', 'Enter a valid category').exists()
 ], async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
         return res.status(400).send({success, error: errors});
     }
     try {
-        const { title, description, price } = req.body;
+        const { title, description, price, category } = req.body;
         if(
             !title &&
             !description &&
-            !price
+            !price &&
+            !category
         ){
             return res.status(400).send({success, error: "Please enter the field and value to be updated"});
         }
@@ -80,7 +84,7 @@ itemRouter.put('/updateitem/:id', fetchUser, [
         const item = await Item.findByIdAndUpdate(itemId, req.body);
         if(item){
             success = true;
-            return res.status(200).send(success, "Item Updated Successfully");
+            return res.status(200).send({success, msg: "Item Updated Successfully"});
         } else{
             return res.status(400).send({success, error: "Item Not Found"});
         }
@@ -132,7 +136,7 @@ itemRouter.post('/addwishlist/:id', fetchUser, async (req, res) => {
             category: category
         });
         success = true;
-        return res.status(200).json(success, items)
+        return res.status(200).json({success, items})
     } catch (error) {
         console.log(error);
         return res.status(400).send({success, error: "Internal Server Error"});
@@ -145,7 +149,7 @@ itemRouter.get('/getwishlist', fetchUser, async (req, res) => {
         const items = await wishList.find({user: req.user});
         if(items){
             success = true;
-            return res.status(200).json(success, items)
+            return res.status(200).json({success, items})
         } else {
             return res.status(200).json({success, error: "Add Items to Wishlist"})
         }
@@ -162,7 +166,7 @@ itemRouter.delete('/wishlistdeleteitem/:id', async(req, res) => {
     const result = await wishList.findByIdAndDelete(itemId);
     if(result){
         success = true;
-        return res.status(200).send(success, "Item Deleted Successfully");
+        return res.status(200).send({success, msg: "Item Deleted Successfully"});
     } else{
         return res.status(400).send({success, error: "Item Not Found"});
     }
@@ -171,4 +175,18 @@ itemRouter.delete('/wishlistdeleteitem/:id', async(req, res) => {
         return res.status(400).send({success, error: "Internal Server Error"});
     }
 });
+
+//Route 7 : Get a item using GET method
+itemRouter.get('/getitem/:id', async (req, res) => {
+    try {
+        const itemId = req.params.id;
+        const items = await Item.findById(itemId);
+        success = true;
+        return res.status(200).json({success, items})
+    } catch (error) {
+        console.log(error);
+        return res.status(400).send({success, error: "Internal Server Error"});
+    }
+});
+
 export default itemRouter;
