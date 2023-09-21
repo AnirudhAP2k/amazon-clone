@@ -1,11 +1,13 @@
 import ItemContext from "./ItemContext";
 import axios from 'axios';
-import React, {useState} from 'react'
+import React, {useState} from 'react';
+import { useSnackbar } from "notistack";
 
 const ItemState = (props) => {
     const host = 'http://localhost:5555'
     const [allItems, setallItems] = useState([]);
     const [item, setItem] = useState([]);
+    const { enqueueSnackbar } = useSnackbar();
 
     const getAllItems = () => {
         axios 
@@ -41,9 +43,26 @@ const ItemState = (props) => {
                 console.log(error)
             })
     }
+
+    const addWishlist = (id) => {
+        axios
+            .post(`${host}/addwishlist/${id}`, {
+                headers: {
+                    "Content-Type": 'application/json',
+                    "auth-token": localStorage.getItem("auth-token")
+                }
+            })
+            .then((res)=>{
+                enqueueSnackbar("Item added to Wishlist Successfully", {variant: "success"})
+            })
+            .catch((error)=>{
+                enqueueSnackbar(error.response.data.error, {variant: "error"})
+                console.log(error);
+            })
+    }
   return (
     <div>
-      <ItemContext.Provider value={{item, allItems, getAllItems, deleteItem, getItem}}>
+      <ItemContext.Provider value={{item, allItems, getAllItems, deleteItem, getItem, addWishlist}}>
         {props.children}
       </ItemContext.Provider>
     </div>

@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
 import ItemContext from '../context/ItemContext';
+import {AiOutlineEdit} from 'react-icons/ai'
 import {BsInfoCircle} from 'react-icons/bs'
-import { MdOutlineAddBox} from 'react-icons/md'
-// import { useSnackbar } from 'notistack';
+import {MdOutlineDelete} from 'react-icons/md'
+import { useSnackbar } from 'notistack';
 import { Link } from 'react-router-dom';
 
 const Items = ({item}) => {
     const context = useContext(ItemContext);
-    const { addWishlist } = context;
-    // const { enqueueSnackbar } = useSnackbar();
+    const { deleteItem, updateItem } = context;
+    const { enqueueSnackbar } = useSnackbar();
 
   return (
     <>
@@ -32,11 +33,17 @@ const Items = ({item}) => {
                     fill='green'
                 />
               </Link>
-              <MdOutlineAddBox
+              <AiOutlineEdit
               className='mx-1'
               style={{cursor: 'pointer', fontSize: '24px'}}
                 fill='blue'
-                onClick={() => {addWishlist(item._id);}}
+                onClick={() => {updateItem(item._id); enqueueSnackbar("Item Deleted Successfully", {variant: "success"}); }}
+              />
+              <MdOutlineDelete
+              className='mx-1'
+              style={{cursor: 'pointer', fontSize: '24px'}}
+                fill='red'
+                onClick={() => {deleteItem(item._id); enqueueSnackbar("Item Deleted Successfully", {variant: "success"}); }}
               />
             </div>
           </div>

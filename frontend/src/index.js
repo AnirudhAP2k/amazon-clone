@@ -4,14 +4,17 @@ import './index.css';
 import App from './App';
 import { BrowserRouter } from 'react-router-dom';
 import ItemState from './context/ItemState';
+import { SnackbarProvider } from 'notistack';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
+    <SnackbarProvider>
       <ItemState>
         <App />
       </ItemState>
+      </SnackbarProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
