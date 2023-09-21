@@ -7,7 +7,6 @@ import bcrypt from 'bcryptjs';
 import fetchUser from '../middleware/fetchUser.js';
 
 const authRouter = express.Router();
-let success = false;
 
 //Route 1 : Creating User using POST method
 authRouter.post('/createuser', [
@@ -18,17 +17,17 @@ authRouter.post('/createuser', [
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).send({success, error: errors })
+        return res.status(400).send({ error: errors })
     }
 
     try {
         const existingUser = await User.findOne({ email: req.body.email });
         if (existingUser) {
-            return res.status(400).send({success, error: "Email already exists" });
+            return res.status(400).send({ error: "Email already exists" });
         }
 
         if (req.body.role !== "Admin" && req.body.role !== "Customer") {
-            return res.status(400).send({success, error: "Enter a valid role : Admin or Customer" })
+            return res.status(400).send({ error: "Enter a valid role : Admin or Customer" })
         }
 
         const salt = await bcrypt.genSalt();
@@ -40,11 +39,10 @@ authRouter.post('/createuser', [
             password: secPass,
             role: req.body.role
         });
-        success = true;
-        return res.status(200).send(success, newUser);
+        return res.status(200).send({newUser});
     } catch (error) {
         console.log(error);
-        return res.status(400).send({success, error: "Internal Server Error" });
+        return res.status(400).send({error: "Internal Server Error" });
     }
 });
 
@@ -55,31 +53,29 @@ authRouter.post('/login', [
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).send({success, error: errors });
+        return res.status(400).send({ error: "Enter a valid email" }   );
     }
 
     try {
         const { email, password } = req.body;
         let user = await User.findOne({ email });
         if (!user) {
-            return res.status(400).send({success, error: "Please login with correct credentials" });
+            return res.status(400).send({ error: "Please login with correct credentials" });
         }
 
-        const passCompare = bcrypt.compare(password, user.password);
+        const passCompare = await bcrypt.compare(password, user.password);
         if (!passCompare) {
-            return res.status(400).send({success, error: "Please login with correct credentials" });
+            return res.status(400).send({ error: "Please login with correct credentials" });
         }
 
         const data = user.id;
         let authToken = jwt.sign(data, JWT_SECRET_KEY);
-        success = true;
         return res.status(200).json({
-            success,
             authToken
         });
     } catch (error) {
         console.log(error);
-        return res.status(400).send({success, error: "Internal Server Error" });
+        return res.status(400).send({ error: "Internal Server Error" });
     }
 });
 
