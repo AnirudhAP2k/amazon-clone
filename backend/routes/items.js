@@ -7,7 +7,6 @@ import Item from '../models/Items.js';
 import wishList from '../models/wishlistItems.js';
 
 const itemRouter = express.Router();
-let success = false;
 
 //Route 1 : Add a new item using POST method
 itemRouter.post('/additem', fetchUser, [
@@ -18,13 +17,13 @@ itemRouter.post('/additem', fetchUser, [
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).send({success, error: errors });
+        return res.status(400).send({ error: errors });
     }
     try {
         const userId = req.user;
         const user = await User.findById(userId);
         if (user.role === "Customer") {
-            return res.status(400).send({success, error: "Not Allowed" });
+            return res.status(400).send({ error: "Not Allowed" });
         }
 
         const newItem = await Item.create({
@@ -33,11 +32,10 @@ itemRouter.post('/additem', fetchUser, [
             price: req.body.price,
             category: req.body.category
         });
-        success = true;
-        return res.status(200).send({success, newItem});
+        return res.status(200).send({ newItem});
     } catch (error) {
         console.log(error);
-        return res.status(400).send({success, error: "Internal Server Error" });
+        return res.status(400).send({ error: "Internal Server Error" });
     }
 });
 
@@ -45,11 +43,10 @@ itemRouter.post('/additem', fetchUser, [
 itemRouter.get('/getallitems', async (req, res) => {
     try {
         const items = await Item.find();
-        success = true;
-        return res.status(200).json({success, items})
+        return res.status(200).json({ items})
     } catch (error) {
         console.log(error);
-        return res.status(400).send({success, error: "Internal Server Error"});
+        return res.status(400).send({ error: "Internal Server Error"});
     }
 });
 
@@ -62,7 +59,7 @@ itemRouter.put('/updateitem/:id', fetchUser, [
 ], async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-        return res.status(400).send({success, error: errors});
+        return res.status(400).send({ error: errors});
     }
     try {
         const { title, description, price, category } = req.body;
@@ -72,25 +69,24 @@ itemRouter.put('/updateitem/:id', fetchUser, [
             !price &&
             !category
         ){
-            return res.status(400).send({success, error: "Please enter the field and value to be updated"});
+            return res.status(400).send({ error: "Please enter the field and value to be updated"});
         }
         const userId = req.user;
         const user = await User.findById(userId);
         if (user.role === "Customer") {
-            return res.status(400).send({success, error: "Not Allowed" });
+            return res.status(400).send({ error: "Not Allowed" });
         }
 
         const itemId = req.params.id;
         const item = await Item.findByIdAndUpdate(itemId, req.body);
         if(item){
-            success = true;
-            return res.status(200).send({success, msg: "Item Updated Successfully"});
+            return res.status(200).send({ msg: "Item Updated Successfully"});
         } else{
-            return res.status(400).send({success, error: "Item Not Found"});
+            return res.status(400).send({ error: "Item Not Found"});
         }
     } catch (error) {
         console.log(error);
-        return res.status(400).send({success, error: "Internal Server Error"});
+        return res.status(400).send({ error: "Internal Server Error"});
     }
 });
 
@@ -100,20 +96,19 @@ itemRouter.delete('/deleteitem/:id', fetchUser, async(req, res) => {
         const userId = req.user;
         const user = await User.findById(userId);
         if (user.role === "Customer") {
-            return res.status(400).send({success, error: "Not Allowed" });
+            return res.status(400).send({ error: "Not Allowed" });
         }
     
     const itemId = req.params.id;
     const result = await Item.findByIdAndDelete(itemId);
     if(result){
-        success = true;
-        return res.status(200).send(success, "Item Deleted Successfully");
+        return res.status(200).send( "Item Deleted Successfully");
     } else{
-        return res.status(400).send({success, error: "Item Not Found"});
+        return res.status(400).send({ error: "Item Not Found"});
     }
     } catch (error) {
         console.log(error);
-        return res.status(400).send({success, error: "Internal Server Error"});
+        return res.status(400).send({ error: "Internal Server Error"});
     }
 });
 
@@ -121,9 +116,10 @@ itemRouter.delete('/deleteitem/:id', fetchUser, async(req, res) => {
 itemRouter.post('/addwishlist/:id', fetchUser, async (req, res) => {
     try {
         const itemId = req.params.id;
-        const existingItem = await wishList.find({item: itemId});
-        if(existingItem){
-            return res.status(400).send({success, error: "Item already in the List"});
+        let existingItem = null;
+        existingItem = await wishList.find({item: itemId});
+        if(existingItem.length){
+            return res.status(400).send({error: "Item already in the List"});
         }
 
         const { title, description, price, category } = await Item.findById(itemId);
@@ -135,11 +131,10 @@ itemRouter.post('/addwishlist/:id', fetchUser, async (req, res) => {
             price: price,
             category: category
         });
-        success = true;
-        return res.status(200).json({success, items})
+        return res.status(200).json({items})
     } catch (error) {
         console.log(error);
-        return res.status(400).send({success, error: "Internal Server Error"});
+        return res.status(400).send({ error: "Internal Server Error"});
     }
 });
 
@@ -147,15 +142,14 @@ itemRouter.post('/addwishlist/:id', fetchUser, async (req, res) => {
 itemRouter.get('/getwishlist', fetchUser, async (req, res) => {
     try {
         const items = await wishList.find({user: req.user});
-        if(items){
-            success = true;
-            return res.status(200).json({success, items})
-        } else {
-            return res.status(200).json({success, error: "Add Items to Wishlist"})
+        if(items.length){
+            return res.status(200).json({items: items})
+        }else{
+            return res.status(200).send({error: "No Item to display", items: items})
         }
     } catch (error) {
         console.log(error);
-        return res.status(400).send({success, error: "Internal Server Error"});
+        return res.status(400).send({ error: "Internal Server Error"});
     }
 });
 
@@ -165,14 +159,13 @@ itemRouter.delete('/wishlistdeleteitem/:id', async(req, res) => {
     const itemId = req.params.id;
     const result = await wishList.findByIdAndDelete(itemId);
     if(result){
-        success = true;
-        return res.status(200).send({success, msg: "Item Deleted Successfully"});
+        return res.status(200).send({ msg: "Item Deleted Successfully"});
     } else{
-        return res.status(400).send({success, error: "Item Not Found"});
+        return res.status(400).send({ error: "Item Not Found"});
     }
     } catch (error) {
         console.log(error);
-        return res.status(400).send({success, error: "Internal Server Error"});
+        return res.status(400).send({ error: "Internal Server Error"});
     }
 });
 
@@ -181,11 +174,10 @@ itemRouter.get('/getitem/:id', async (req, res) => {
     try {
         const itemId = req.params.id;
         const items = await Item.findById(itemId);
-        success = true;
-        return res.status(200).json({success, items})
+        return res.status(200).json({ items})
     } catch (error) {
         console.log(error);
-        return res.status(400).send({success, error: "Internal Server Error"});
+        return res.status(400).send({ error: "Internal Server Error"});
     }
 });
 

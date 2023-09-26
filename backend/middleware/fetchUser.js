@@ -4,7 +4,7 @@ import { JWT_SECRET_KEY } from '../config.js';
 const fetchUser = (req, res, next) => {
     //Get user using auth token
 
-    const token = req.header('auth-token');
+    const token = req.header("auth-token");
     if (!token) {
         return res.status(400).send({ error: "Invalid Token" });
     }
