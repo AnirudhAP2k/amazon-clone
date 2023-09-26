@@ -23,6 +23,7 @@ const Login = () => {
       })
       .then((res) => {
         localStorage.setItem("auth-token", res.data.authToken);
+        localStorage.setItem("role", res.data.role);
         enqueueSnackbar("Login Successfull", { variant: "success" });
         navigate("/");
       })

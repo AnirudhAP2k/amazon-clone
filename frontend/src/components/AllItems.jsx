@@ -6,7 +6,7 @@ import {MdOutlineDelete} from 'react-icons/md'
 import { useSnackbar } from 'notistack';
 import { Link } from 'react-router-dom';
 
-const Items = ({item}) => {
+const AllItems = ({item}) => {
     const context = useContext(ItemContext);
     const { deleteItem, updateItem } = context;
     const { enqueueSnackbar } = useSnackbar();
@@ -53,4 +53,4 @@ const Items = ({item}) => {
   );
 };
 
-export default Items
+export default AllItems

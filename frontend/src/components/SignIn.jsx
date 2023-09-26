@@ -32,7 +32,7 @@ const SignIn = () => {
     e.preventDefault();
     if (credentials.cPassword === credentials.password) {
       axios
-        .post("http://localhost:5555/createuser", data, {
+        .post("http://localhost:5000/createuser", data, {
           headers: "application/json",
         })
         .then((res) => {

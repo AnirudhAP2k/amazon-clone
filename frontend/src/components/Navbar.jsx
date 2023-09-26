@@ -7,6 +7,7 @@ function Navbar() {
   const { enqueueSnackbar } = useSnackbar();
     const handleLogOut =() => {
       localStorage.removeItem("auth-token");
+      localStorage.removeItem("role");
      enqueueSnackbar("LogOut Successful", {variant: "success"});
     }
 
@@ -99,6 +100,12 @@ function Navbar() {
                 </ul>
               </li>
             </ul>
+            <Link
+                  className="btn btn-dark mx-1"
+                  role="button"
+                >
+                  {localStorage.getItem("role")}
+                </Link>
             {!localStorage.getItem("auth-token") ? (
               <form className="d-flex">
                 <Link

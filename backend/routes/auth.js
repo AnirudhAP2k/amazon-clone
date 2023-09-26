@@ -71,7 +71,8 @@ authRouter.post('/login', [
         const data = user.id;
         let authToken = jwt.sign(data, JWT_SECRET_KEY);
         return res.status(200).json({
-            authToken
+            authToken: authToken,
+            role: user.role
         });
     } catch (error) {
         console.log(error);

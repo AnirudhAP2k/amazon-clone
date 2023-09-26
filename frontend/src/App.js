@@ -6,6 +6,7 @@ import ShowItem from './components/ShowItem';
 import SignIn from './components/SignIn';
 import Login from './components/Login';
 import MyCart from './components/MyCart';
+import Admin from './components/Admin';
 
 const App = () => {
   return (
@@ -17,6 +18,7 @@ const App = () => {
         <Route exact path='/signin' element={<SignIn/>} />
         <Route exact path='/login' element={<Login/>} />
         <Route exact path='/mycart' element={<MyCart/>} />
+        <Route exact path='/admindashboard' element={<Admin/>} />
       </Routes>
     </div>
   )
