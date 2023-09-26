@@ -16,7 +16,7 @@ const Login = () => {
 
     e.preventDefault();
     axios
-      .post("http://localhost:5555/login", data, {
+      .post("http://localhost:5000/login", data, {
         headers: {
           "Content-Type": "application/json",
         },
@@ -27,6 +27,7 @@ const Login = () => {
         navigate("/");
       })
       .catch((error) => {
+        console.log(error)
         setCredentials({ email: credentials.email, password: "" });
         enqueueSnackbar(error.response.data.error, { variant: "error" });
       });

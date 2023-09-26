@@ -1,13 +1,14 @@
 import React from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useSnackbar } from 'notistack';
 
 function Navbar() {
   let location = useLocation();
-
-  //   const handleLogout =() => {
-  //     localStorage.removeItem("auth-token");
-  //    showAlert("LogOut Successful", "success");
-  //   }
+  const { enqueueSnackbar } = useSnackbar();
+    const handleLogOut =() => {
+      localStorage.removeItem("auth-token");
+     enqueueSnackbar("LogOut Successful", {variant: "success"});
+    }
 
   return (
     <div>
@@ -121,7 +122,7 @@ function Navbar() {
               </form>
             ) : (
               <form className="d-flex">
-                <Link className={`btn btn-dark mx-1`} to="/login" role="button">
+                <Link className={`btn btn-dark mx-1`} to="/login" onClick={handleLogOut} role="button">
                   Log Out
                 </Link>
                 <Link

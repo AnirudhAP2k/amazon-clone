@@ -4,9 +4,10 @@ import React, {useState} from 'react';
 import { useSnackbar } from "notistack";
 
 const ItemState = (props) => {
-    const host = 'http://localhost:5555'
+    const host = 'http://localhost:5000';
     const [allItems, setallItems] = useState([]);
     const [item, setItem] = useState([]);
+    const [cartItems, setCartItems] = useState([]);
     const { enqueueSnackbar } = useSnackbar();
 
     const getAllItems = () => {
@@ -33,9 +34,7 @@ const ItemState = (props) => {
 
     const getItem = async (id) => {
         await axios 
-            .get(`${host}/getitem/${id}`, {
-                headers: 'application/json'
-            })
+            .get(`${host}/getitem/${id}`)
             .then((res)=>{
                 setItem(res.data.items);
             })
@@ -44,15 +43,12 @@ const ItemState = (props) => {
             })
     }
 
-    const addWishlist = (id) => {
-        axios
-            .post(`${host}/addwishlist/${id}`, {
-                headers: {
-                    "Content-Type": 'application/json',
-                    "auth-token": localStorage.getItem("auth-token")
-                }
+    const addWishlist = async (id) => {
+        await axios
+            .post(`${host}/addwishlist/${id}`, null, {
+                headers:{"auth-token" : localStorage.getItem("auth-token")}
             })
-            .then((res)=>{
+            .then(()=>{
                 enqueueSnackbar("Item added to Wishlist Successfully", {variant: "success"})
             })
             .catch((error)=>{
@@ -60,9 +56,39 @@ const ItemState = (props) => {
                 console.log(error);
             })
     }
+
+    const myCart =  () => {
+         axios
+            .get(`${host}/getwishlist`, {
+                headers: {"auth-token" : localStorage.getItem("auth-token")}
+            })
+            .then((res)=>{
+                setCartItems(res.data.items);
+                if(res.data.items.length === 0){
+                    enqueueSnackbar(res.data.error, {variant: "error"})
+                }  
+            })
+            .catch((error)=>{
+                enqueueSnackbar(error.response.data.error, {variant: "error"})
+                console.log(error)
+            })
+        }
+
+    const deleteCartItem = (id) => {
+        axios
+            .delete(`${host}/wishlistdeleteitem/${id}`)
+            .then((res)=>{
+                enqueueSnackbar(res.data.msg, {variant: "success"})
+                 myCart();
+        })
+            .catch((error)=>{
+                console.log(error)
+                enqueueSnackbar(error.response.data.error, {variant: "error"})
+            })
+    }
   return (
     <div>
-      <ItemContext.Provider value={{item, allItems, getAllItems, deleteItem, getItem, addWishlist}}>
+      <ItemContext.Provider value={{item, allItems, cartItems, getAllItems, deleteItem, getItem, addWishlist, myCart, deleteCartItem}}>
         {props.children}
       </ItemContext.Provider>
     </div>

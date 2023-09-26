@@ -1,17 +1,27 @@
 import React, { useEffect, useContext } from "react";
 import Items from "./Items";
 import ItemContext from "../context/ItemContext";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSnackbar } from 'notistack';
 
-function Notes() {
+const Notes = () => {
   const context = useContext(ItemContext);
   const { allItems, getAllItems } = context;
   const { type } = useParams();
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar();
 
-  useEffect(()=>{
-    getAllItems();
+  useEffect(() => {
+    if(localStorage.getItem('auth-token')){
+      getAllItems();
+    }
+    else{
+      enqueueSnackbar("Login Required", {variant: "error"});
+      navigate('/login');
+    }
     // eslint-disable-next-line
-  }, [])
+  }, []);
+  
   return (
     <>
     <div className="container">

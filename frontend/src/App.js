@@ -5,6 +5,7 @@ import Home from './components/Home';
 import ShowItem from './components/ShowItem';
 import SignIn from './components/SignIn';
 import Login from './components/Login';
+import MyCart from './components/MyCart';
 
 const App = () => {
   return (
@@ -15,6 +16,7 @@ const App = () => {
         <Route exact path='/item/:id' element={<ShowItem/>} />
         <Route exact path='/signin' element={<SignIn/>} />
         <Route exact path='/login' element={<Login/>} />
+        <Route exact path='/mycart' element={<MyCart/>} />
       </Routes>
     </div>
   )
