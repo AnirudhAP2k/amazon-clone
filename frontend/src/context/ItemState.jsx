@@ -21,14 +21,41 @@ const ItemState = (props) => {
             })
     }
 
+    const updateItem = (id, title, description, price, category) => {
+        const data ={
+            title,
+            description,
+            price,
+            category
+        }
+        axios
+            .put(`${host}/updateitem/${id}`, data, {
+                headers: {"auth-token" : localStorage.getItem("auth-token")}
+            })
+            .then((res)=>{
+                console.log(res);
+                enqueueSnackbar(res.data.msg, {variant: "success"});
+                getAllItems();
+            })
+            .catch((error)=>{
+                console.log(error);
+                enqueueSnackbar(error.response.data.errors[0].msg, {variant: "error"})
+            })
+    }
+
     const deleteItem = (id) => {
         axios
-            .delete(`${host}/deleteitem/${id}`)
+            .delete(`${host}/deleteitem/${id}`, {
+                headers:{"auth-token" : localStorage.getItem("auth-token")}
+            })
             .then((res)=>{
-                console.log(res.data);
+                console.log(res)
+                // enqueueSnackbar(res.data.msg, {variant: "success"})
+                 getAllItems();
             })
             .catch((error)=>{
                 console.log(error)
+                enqueueSnackbar(error.response.data.error, {variant: "error"})
             })
     }
 
@@ -88,7 +115,7 @@ const ItemState = (props) => {
     }
   return (
     <div>
-      <ItemContext.Provider value={{item, allItems, cartItems, getAllItems, deleteItem, getItem, addWishlist, myCart, deleteCartItem}}>
+      <ItemContext.Provider value={{item, allItems, cartItems, getAllItems, deleteItem, updateItem, getItem, addWishlist, myCart, deleteCartItem}}>
         {props.children}
       </ItemContext.Provider>
     </div>
