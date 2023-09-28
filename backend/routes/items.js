@@ -10,14 +10,14 @@ const itemRouter = express.Router();
 
 //Route 1 : Add a new item using POST method
 itemRouter.post('/additem', fetchUser, [
-    body('title', 'Enter atleat 2 characters').isLength({ min: 2 }),
+    body('title', 'Enter a valid title').isLength({ min: 2 }),
     body('description', 'Enter a valid description of atleast 5 characters').isLength({ min: 5 }),
     body('price', 'Enter a valid price').isNumeric(),
-    body('category', 'Enter a valid category').exists()
+    body('category', 'Enter a valid category').isLength({min: 1})
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(400).send({ error: errors });
+        return res.status(400).send(errors);
     }
     try {
         const userId = req.user;
@@ -52,14 +52,14 @@ itemRouter.get('/getallitems', async (req, res) => {
 
 //Route 3 : Update an item using PUT method
 itemRouter.put('/updateitem/:id', fetchUser, [
-    body('title', 'Enter a atleast 2 charaters').isLength({ min : 2}),
-    body('description', 'Enter atleat 5 characters').isLength({ min : 5}),
+    body('title', 'Enter a valid title').isLength({ min : 2}),
+    body('description', 'Enter a valid description').isLength({ min : 5}),
     body('price', 'Enter a valid price').isNumeric(),
-    body('category', 'Enter a valid category').exists()
+    body('category', 'Enter a valid category').isLength({min: 1})
 ], async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-        return res.status(400).send({ error: errors});
+        return res.status(400).send(errors);
     }
     try {
         const { title, description, price, category } = req.body;
@@ -67,7 +67,7 @@ itemRouter.put('/updateitem/:id', fetchUser, [
             !title &&
             !description &&
             !price &&
-            !category
+            !category 
         ){
             return res.status(400).send({ error: "Please enter the field and value to be updated"});
         }
