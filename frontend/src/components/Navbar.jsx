@@ -52,53 +52,6 @@ function Navbar() {
                   About
                 </Link>
               </li>
-              <li className="nav-item dropdown">
-                <Link
-                  className="nav-link dropdown-toggle text-light"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Categories
-                </Link>
-                <ul className="dropdown-menu">
-                  <li>
-                    <Link className="dropdown-item" to="/">
-                      All Categories
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/clothes">
-                      Clothes
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/business">
-                      Electronics
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/entertainment">
-                      Smart Phones
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/health">
-                      Footwear
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/science">
-                      Sports
-                    </Link>
-                  </li>
-                  <li>
-                    <Link className="dropdown-item" to="/technology">
-                      Homeware's
-                    </Link>
-                  </li>
-                </ul>
-              </li>
             </ul>
             <Link
                   className="btn btn-dark mx-1"
@@ -132,7 +85,7 @@ function Navbar() {
                 <Link className={`btn btn-dark mx-1`} to="/login" onClick={handleLogOut} role="button">
                   Log Out
                 </Link>
-                <Link
+                {localStorage.getItem("role") !== "Admin" && <Link
                   className={`btn btn-dark mx-1 ${
                     location.pathname === "/mycart" ? "active" : ""
                   }`}
@@ -140,7 +93,7 @@ function Navbar() {
                   to="/mycart"
                 >
                   My Cart
-                </Link>
+                </Link>}
               </form>
             )}
           </div>

@@ -3,6 +3,7 @@ import ItemContext from "../context/ItemContext";
 import { useParams, Link } from "react-router-dom";
 import { BsInfoCircle } from "react-icons/bs";
 import { MdDeleteOutline } from "react-icons/md";
+import Backbutton from "./Backbutton";
 
 const MyCart = () => {
   const context = useContext(ItemContext);
@@ -17,6 +18,7 @@ const MyCart = () => {
   return (
     <>
       <div className="container">
+        <Backbutton/>
         <div className="row my-3">
           <h2>All Items - {type}</h2>
           

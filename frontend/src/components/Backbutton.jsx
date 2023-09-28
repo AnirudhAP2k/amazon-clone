@@ -7,7 +7,7 @@ const Backbutton = () => {
     <div className='d-flex' style={{marginTop: '30px'}}>
       <Link className='btn btn-primary rounded-lg' to={'/'}>
         <BsArrowLeft className='me-2' />
-        Back
+        Back to Home
       </Link>
     </div>
   );
