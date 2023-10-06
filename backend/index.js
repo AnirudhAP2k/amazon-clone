@@ -1,5 +1,5 @@
 import express from "express";
-import { PORT } from "./config.js";
+import { PORT } from "./configuration/config.js";
 import connectToMongo from "./db.js";
 import authRouter from './routes/auth.js';
 import itemRouter from "./routes/items.js";

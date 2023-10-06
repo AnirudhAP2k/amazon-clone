@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { JWT_SECRET_KEY } from '../config.js';
+import { JWT_SECRET_KEY } from '../configuration/config.js';
 
 const fetchUser = (req, res, next) => {
     //Get user using auth token
