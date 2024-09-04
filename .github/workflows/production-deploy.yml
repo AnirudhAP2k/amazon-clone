@@ -1,4 +1,4 @@
-name: Deploy React App to GitHub Pages
+name: Production Deployment
 
 on:
   # Runs on pushes targeting the default branch
@@ -41,7 +41,7 @@ jobs:
       - name: Upload production-ready build files
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './frontend/build/index.html'  # Path to the build directory
+          path: './frontend/build'  # Path to the build directory
 
   # Deployment job
   deploy:
