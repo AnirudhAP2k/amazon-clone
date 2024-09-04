@@ -1,9 +1,8 @@
 import mongoose from "mongoose";
-import { mongoURI } from "./configuration/config.js";
 
-const connectToMongo = () => {
-    mongoose    
-        .connect(mongoURI)
+const connectToMongo = async () => {
+    await mongoose    
+        .connect(process.env.mongoURI)
         .then(()=>{
             console.log("Connected to mongo");
         })

@@ -1,7 +1,6 @@
 import express from 'express';
 import { body, validationResult } from 'express-validator';
 import User from '../models/User.js'
-import { JWT_SECRET_KEY } from '../configuration/config.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import fetchUser from '../middleware/fetchUser.js';
@@ -69,7 +68,7 @@ authRouter.post('/login', [
         }
 
         const data = user.id;
-        let authToken = jwt.sign(data, JWT_SECRET_KEY);
+        let authToken = jwt.sign(data, process.env.JWT_SECRET_KEY);
         return res.status(200).json({
             authToken: authToken,
             role: user.role
