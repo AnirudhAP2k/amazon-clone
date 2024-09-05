@@ -43,6 +43,9 @@ jobs:
         with:
           path: './frontend/build'  # Path to the build directory
 
+      - name: Start the backend server
+        run: npm run start
+
   # Deployment job
   deploy:
     environment:
