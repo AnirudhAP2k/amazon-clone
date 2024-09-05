@@ -28,6 +28,6 @@ if(process.env.NODE_ENV === 'prod'){
 }
 
 app.listen(PORT, () => {
-    console.log("App is listining at : ", PORT)
+    console.log(`App is listining at : http://localhost:${PORT}`)
     connectToMongo()
 });
