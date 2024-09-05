@@ -32,7 +32,7 @@ const SignIn = () => {
     e.preventDefault();
     if (credentials.cPassword === credentials.password) {
       axios
-        .post("http://localhost:5000/createuser", data, {
+        .post("https://amazon-clone-f6c4.onrender.com/createuser", data, {
           headers: "application/json",
         })
         .then((res) => {
