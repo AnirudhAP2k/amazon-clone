@@ -16,7 +16,7 @@ const Login = () => {
 
     e.preventDefault();
     axios
-      .post("https://amazon-clone-f6c4.onrender.com/login", data, {
+      .post(`${process.env.REACT_APP_HOST}/login`, data, {
         headers: {
           "Content-Type": "application/json",
         },

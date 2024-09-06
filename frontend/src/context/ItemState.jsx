@@ -4,7 +4,9 @@ import React, {useState} from 'react';
 import { useSnackbar } from "notistack";
 
 const ItemState = (props) => {
-    const host = 'https://amazon-clone-f6c4.onrender.com';
+    const host = process.env.REACT_APP_HOST;
+    console.log(process.env.REACT_APP_HOST);
+    
     const [allItems, setallItems] = useState([]);
     const [item, setItem] = useState([]);
     const [cartItems, setCartItems] = useState([]);

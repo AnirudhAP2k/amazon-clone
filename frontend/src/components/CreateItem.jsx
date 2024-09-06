@@ -21,7 +21,7 @@ const CreateBook = () => {
       category,
     };
     axios
-      .post("https://amazon-clone-f6c4.onrender.com/additem", data, {
+      .post(`${process.env.REACT_APP_HOST}/additem`, data, {
         headers:{"auth-token" : localStorage.getItem("auth-token")}
       })
       .then(() => {
